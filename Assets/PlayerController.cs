@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour {
 	Animator anime;
 	UnityChanControlScriptWithRgidBody unitychan;
 
+		bool startGame = false;
+
 
 	// Use this for initialization
 	void Start () {
@@ -37,12 +39,32 @@ public class PlayerController : MonoBehaviour {
 	{
 		if (c.gameObject.tag == "Floor")
 		{
-				gameObject.transform.SetParent(c.transform);
+			gameObject.transform.SetParent(c.transform);
 
-				for ( int count = 0; count < 50; count++)
-				{
-					//camera.transform.
-				}
+			if (startGame == false)
+			{
+				startGame = true;
+
+				StartCoroutine("RollCamera");
+				
+				//camera.transform.localRotation.y = camera.transform.localRotation.y + 175;
+				//camera.transform.LookAt(unityChan.transform);
+
+
+			}
+		}
+	}
+
+	IEnumerator RollCamera()
+	{
+		for (int count = 0; count < 40; count++)
+		{
+			camera.transform.localPosition = new Vector3 (camera.transform.localPosition.x + ((20 - count) * 0.003F),
+				                                             camera.transform.localPosition.y,
+				                                             camera.transform.localPosition.z - (40 - Mathf.Abs (20 - count)) * 0.003F);
+
+			camera.transform.LookAt (unityChan.transform);
+			yield return new WaitForSeconds (0.01F);
 		}
 	}
 	
