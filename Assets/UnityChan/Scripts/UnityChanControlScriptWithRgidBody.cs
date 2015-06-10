@@ -90,24 +90,32 @@ namespace UnityChan
 				velocity *= backwardSpeed;	// 移動速度を掛ける
 			}
 		
-			if (Input.GetButtonDown ("Jump")) {	// スペースキーを入力したら
+			if (PlayerController.AnimationOn == false)
+			{
+				if (Input.GetButtonDown ("Jump"))
+				{	// スペースキーを入力したら
+			
 
-				//アニメーションのステートがLocomotionの最中のみジャンプできる
-				if (currentBaseState.nameHash == locoState) {
-					//ステート遷移中でなかったらジャンプできる
-					if (!anim.IsInTransition (0)) {
-						rb.AddForce (Vector3.up * jumpPower, ForceMode.VelocityChange);
-						anim.SetBool ("Jump", true);		// Animatorにジャンプに切り替えるフラグを送る
+					//アニメーションのステートがLocomotionの最中のみジャンプできる
+					if (currentBaseState.nameHash == locoState)
+					{
+						//ステート遷移中でなかったらジャンプできる
+						if (!anim.IsInTransition (0))
+						{
+							rb.AddForce (Vector3.up * jumpPower, ForceMode.VelocityChange);
+							anim.SetBool ("Jump", true);		// Animatorにジャンプに切り替えるフラグを送る
+						}
 					}
 				}
 			}
-		
+			if (PlayerController.AnimationOn == false) {
 
-			// 上下のキー入力でキャラクターを移動させる
-			transform.localPosition += velocity * Time.fixedDeltaTime;
+				// 上下のキー入力でキャラクターを移動させる
+				transform.localPosition += velocity * Time.fixedDeltaTime;
 
-			// 左右のキー入力でキャラクタをY軸で旋回させる
-			transform.Rotate (0, h * rotateSpeed, 0);	
+				// 左右のキー入力でキャラクタをY軸で旋回させる
+				transform.Rotate (0, h * rotateSpeed, 0);	
+			}
 	
 
 			// 以下、Animatorの各ステート中での処理

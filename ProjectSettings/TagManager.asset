@@ -4,7 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Enemy
   - Floor
+  - New Tag
   layers:
   - Default
   - TransparentFX
