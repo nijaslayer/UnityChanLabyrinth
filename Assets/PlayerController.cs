@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-			ownAnimator = GetComponent<Animator> ();
+		ownAnimator = GetComponent<Animator> ();
 
 		AnimationOn = true;
 
@@ -88,29 +88,66 @@ public class PlayerController : MonoBehaviour {
 	{
 		if (( c.gameObject.tag == "Enemy") && (attackOn == true) )
 		{
-				CancelInvoke ();
+				//CancelInvoke ();
 
 				attackOn = false;
 
-				Vector3 cCenter = new Vector3(c.transform.position.x, c.transform.position.y + 1, c.transform.position.z);
-
-				yield return new WaitForSeconds(0.35F);
+				yield return new WaitForSeconds(0.3F);
 				c.gameObject.GetComponent<EnemyControlloer>().DeathEnemy();
-				Instantiate(hitEffect, cCenter, c.transform.rotation);
 
-				yield return new WaitForSeconds(0.05F);
+				Vector3 cCenter = new Vector3(c.transform.position.x, c.transform.position.y + 1, c.transform.position.z);
+				GameObject hit = Instantiate(hitEffect, cCenter, c.transform.rotation) as GameObject;
 
-				c.transform.GetComponent<Animator>().speed = 0;
-				ownAnimator.speed = 0;;
-				//Time.timeScale = 0;
+				yield return new WaitForSeconds(0.1F);
 
+				//animation stop
+				//particle
+				hit.transform.GetComponent<ParticleSystem>().Pause ();
+				//enemy
+				c.transform.GetComponent<Animator>().enabled = false;
+				c.transform.GetComponent<SpringManager>().enabled = false;
+				c.transform.GetComponent<FaceUpdate>().enabled = false;
+				//plagyer
+				GetComponent<Animator> ().enabled = false;
+				GetComponent<SpringManager>().enabled = false;
+				GetComponent<FaceUpdate>().enabled = false;
+
+				//save
 				Vector3 originCameraPos = camera.transform.localPosition;
 
+				//one camera
 				camera.transform.localPosition = new Vector3(-0.8F, 0.5F, 1F);
 				camera.transform.LookAt (unityChan.transform);
 
 				yield return new WaitForSeconds(0.5F);
 
+				//two camera
+				camera.transform.localPosition = new Vector3(0.8F, 2, -0.5F);
+				camera.transform.LookAt (unityChan.transform);
+
+
+				yield return new WaitForSeconds(0.5F);
+				
+				//two camera
+				camera.transform.localPosition = new Vector3(-1.5F, 0.5F, -0.2F);
+				camera.transform.LookAt (unityChan.transform);
+				camera.transform.localPosition = new Vector3(-1F, 0.5F, 0.1F);
+
+				yield return new WaitForSeconds(0.5F);
+
+				//animation stop
+				//particle
+				hit.transform.GetComponent<ParticleSystem>().Play ();
+				//enemy
+				c.transform.GetComponent<Animator>().enabled = true;
+				c.transform.GetComponent<SpringManager>().enabled = true;
+				c.transform.GetComponent<FaceUpdate>().enabled = true;
+				//plagyer
+				GetComponent<Animator> ().enabled = true;
+				GetComponent<SpringManager>().enabled = true;
+				GetComponent<FaceUpdate>().enabled = true;
+
+				//four camera
 				camera.transform.localPosition = new Vector3(0.8F, 0.5F, 1F);
 				camera.transform.LookAt (unityChan.transform);
 		}
@@ -142,7 +179,7 @@ public class PlayerController : MonoBehaviour {
 	//Attack aniamtion
 	void AttackEnd()
 	{
-			print ("おいおい");
+
 		attackOn = false;
 		anime.SetTrigger ("ToLocomotion");
 		Invoke ("ActionEnd", 0.3F);
